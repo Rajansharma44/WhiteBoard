@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Drawing Board</title>
+<style>
+    canvas {
+        border: 2px solid #000;
+        cursor: crosshair;
+    }
+</style>
+</head>
+<body>
+<h1 style="color: green;">A simple Whiteboard:</h1>
+<canvas id="canvas" width="500" height="600"></canvas>
+<button onclick="switchToPen()">Pen</button>
+<button onclick="switchToEraser()">Eraser</button>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let isErasing = false;
+    
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDraw);
+    
+    function startDraw(event) {
+        if (isErasing) {
+            ctx.strokeStyle = '#fff'; // set color to white for erasing
+        } else {
+            ctx.strokeStyle = 'red'; // set color to red for drawing
+        }
+        isDrawing = true;
+        draw(event);
+    }
+    
+    function draw(event) {
+        if (!isDrawing) return;
+        
+        const x = event.pageX - canvas.offsetLeft;
+        const y = event.pageY - canvas.offsetTop;
+        
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+    }
+    
+    function stopDraw() {
+        isDrawing = false;
+        ctx.beginPath();
+    }
+
+    function switchToPen() {
+        isErasing = false;
+    }
+
+    function switchToEraser() {
+        isErasing = true;
+    }
+</script>
+
+</body>
+</html>
